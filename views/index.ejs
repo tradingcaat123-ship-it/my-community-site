@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hardware Community</title>
+</head>
+<body>
+  <h1>글 목록</h1>
+  <a href="/new">새 글 작성</a>
+  <ul>
+    <% posts.forEach(post => { %>
+      <li><strong><%= post.title %></strong> - <%= post.createdAt.toDateString() %><br><%= post.content %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>
