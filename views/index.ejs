@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hardware Community</title>
+  <title>HardwareTalk</title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <h1>글 목록</h1>
-  <a href="/new">새 글 작성</a>
-  <ul>
-    <% posts.forEach(post => { %>
-      <li><strong><%= post.title %></strong> - <%= post.createdAt.toDateString() %><br><%= post.content %></li>
-    <% }) %>
-  </ul>
+  <header>
+    <h1>🔧 HardwareTalk</h1>
+    <p>하드웨어 유저들의 커뮤니티</p>
+  </header>
+  <main>
+    <section class="post">
+      <h2>🖥️ 오늘의 질문: GTX 1070 아직 쓸만한가요?</h2>
+      <p>2025년 기준 GTX 1070으로도 충분히 게임 돌아갈까요?</p>
+    </section>
+    <section class="post">
+      <h2>💻 인텔 12세대 i5 vs AMD 5600X</h2>
+      <p>그래픽 작업용으로 어떤 CPU가 나을까요?</p>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 HardwareTalk. All rights reserved.</p>
+  </footer>
 </body>
 </html>

@@ -1,13 +1,17 @@
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 3000; // 💡 Render는 이 방식만 인식함
+const path = require('path');
+const port = process.env.PORT || 3000;
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
-  res.send('Hello from Node.js on Render!');
+  res.render('index');
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Site running at http://localhost:${port}`);
 });
