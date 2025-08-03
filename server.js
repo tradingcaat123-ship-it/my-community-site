@@ -85,3 +85,9 @@ app.post('/login', async (req, res) => {
     res.status(500).send('로그인 중 오류 발생');
   }
 });
+
+// ✅ 로그아웃 처리
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/');
+});
