@@ -11,7 +11,6 @@
       padding: 0;
       background-color: #f4f4f4;
     }
-
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -20,24 +19,33 @@
       color: white;
       padding: 10px 20px;
     }
-
     .navbar .logo {
       font-weight: bold;
       font-size: 1.5em;
     }
-
     .navbar .auth {
       font-size: 0.95em;
     }
-
     .navbar a {
       color: white;
       text-decoration: none;
       margin-left: 10px;
     }
-
     .container {
+      padding: 30px;
+    }
+    .post {
+      background-color: white;
       padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .post h3 {
+      margin: 0;
+    }
+    .post p {
+      color: #555;
     }
   </style>
 </head>
@@ -55,8 +63,26 @@
   </div>
 
   <div class="container">
-    <h1>하드웨어 커뮤니티에 오신 걸 환영합니다!</h1>
-    <p>로그인하고 질문/답변을 나눠보세요!</p>
+    <% if (user) { %>
+      <h2><%= user.username %>님, 하드웨어 커뮤니티에 오신 걸 환영합니다!</h2>
+      <p>궁금한 점을 자유롭게 남겨보세요.</p>
+    <% } else { %>
+      <h2>하드웨어 커뮤니티에 오신 걸 환영합니다!</h2>
+      <p>로그인하고 질문/답변을 나눠보세요!</p>
+    <% } %>
+
+    <div class="post">
+      <h3>🖥️ 오늘의 질문: GTX 1070 아직 쓸만한가요?</h3>
+      <p>2025년 기준 GTX 1070으로도 충분히 게임 돌아갈까요?</p>
+    </div>
+    <div class="post">
+      <h3>💻 인텔 12세대 i5 vs AMD 5600X</h3>
+      <p>그래픽 작업용으로 어떤 CPU가 나을까요?</p>
+    </div>
+    <div class="post">
+      <h3>🧊 수냉 쿨러 vs 공랭 쿨러 추천</h3>
+      <p>요즘 공랭도 잘나오던데 수냉 쓸 이유 있을까요?</p>
+    </div>
   </div>
 </body>
 </html>
