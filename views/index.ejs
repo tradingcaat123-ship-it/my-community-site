@@ -1,15 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <title>Community</title>
+  <meta charset="UTF-8">
+  <title>HardwareTalk - 하드웨어 커뮤니티</title>
   <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1e2a38;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .navbar .logo {
+      font-weight: bold;
+      font-size: 1.5em;
+    }
+
+    .navbar .auth {
+      font-size: 0.95em;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin-left: 10px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .post {
+      background-color: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .post h2 {
+      margin-top: 0;
+    }
+
+    .post p {
+      margin-bottom: 0;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to the Community</h1>
-  <% if (user) { %>
-    <p>Hello, <%= user.username %>! <a href="/logout">Logout</a></p>
-  <% } else { %>
-    <p><a href="/login">Login</a> | <a href="/register">Register</a></p>
-  <% } %>
+  <div class="navbar">
+    <div class="logo">🔧 HardwareTalk</div>
+    <div class="auth">
+      <% if (user) { %>
+        <span><%= user.username %>님</span>
+        <a href="/logout">로그아웃</a>
+      <% } else { %>
+        <a href="/login">로그인</a> | <a href="/register">회원가입</a>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="post">
+      <h2>💻 오늘의 질문: GTX 1070 아직 쓸만한가요?</h2>
+      <p>2025년 기준 GTX 1070으로도 충분히 게임 돌아갈까요?</p>
+    </div>
+
+    <div class="post">
+      <h2>🖥️ 인텔 12세대 i5 vs AMD 5600X</h2>
+      <p>그래픽 작업용으로 어떤 CPU가 나을까요?</p>
+    </div>
+  </div>
 </body>
 </html>
