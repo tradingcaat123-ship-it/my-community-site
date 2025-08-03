@@ -19,64 +19,56 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // 세션 설정
 app.use(session({
-  secret: 'secret-key', // 실제 배포시 .env로 빼야 함
+  secret: 'secret-key',
   resave: false,
   saveUninitialized: true
 }));
 
-// 홈
+// ✅ 홈페이지
 app.get('/', (req, res) => {
-  res.render('index', { user: req.session.user });
+  try {
+    const user = req.session ? req.session.user : null;
+    res.render('index', { user });
+  } catch (err) {
+    console.error('Error rendering index:', err);
+    res.status(500).send('서버 오류입니다.');
+  }
 });
 
-// 회원가입 폼
+// ✅ 회원가입 폼
 app.get('/register', (req, res) => {
   res.render('register');
 });
 
-// 회원가입 처리
+// ✅ 회원가입 처리
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  const users = JSON.parse(fs.readFileSync('users.json', 'utf-8'));
+  try {
+    const { username, password } = req.body;
+    const users = JSON.parse(fs.readFileSync('users.json', 'utf-8'));
 
-  if (users.find(u => u.username === username)) {
-    return res.send('이미 존재하는 아이디입니다.');
+    if (users.find(u => u.username === username)) {
+      return res.send('이미 존재하는 아이디입니다.');
+    }
+
+    const hashed = await bcrypt.hash(password, 10);
+    users.push({ username, password: hashed });
+
+    fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
+    res.redirect('/login');
+  } catch (err) {
+    console.error('회원가입 에러:', err);
+    res.status(500).send('회원가입 중 오류 발생');
   }
-
-  const hashed = await bcrypt.hash(password, 10);
-  users.push({ username, password: hashed });
-
-  fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
-  res.redirect('/login');
 });
 
-// 로그인 폼
+// ✅ 로그인 폼
 app.get('/login', (req, res) => {
   res.render('login');
 });
 
-// 로그인 처리
+// ✅ 로그인 처리
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  const users = JSON.parse(fs.readFileSync('users.json', 'utf-8'));
-  const user = users.find(u => u.username === username);
-
-  if (!user) return res.send('아이디가 존재하지 않습니다.');
-
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) return res.send('비밀번호가 틀렸습니다.');
-
-  req.session.user = { username: user.username };
-  res.redirect('/');
-});
-
-// 로그아웃
-app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
-});
-
-// 서버 실행
-app.listen(port, () => {
-  console.log(`Site running at http://localhost:${port}`);
-});
+  try {
+    const { username, password } = req.body;
+    const users = JSON.parse(fs.readFileSync('users.json', 'utf-8'));
+    const user = users.find
