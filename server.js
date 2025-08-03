@@ -78,7 +78,7 @@ app.post('/register', async (req, res) => {
 
 // 로그인 폼
 app.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', { error: null }); // 🔧 error 변수 명시적으로 넘겨줌!
 });
 
 // 로그인 처리
