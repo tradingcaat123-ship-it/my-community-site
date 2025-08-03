@@ -85,20 +85,26 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const users = loadUsers();
+    const users = JSON.parse(fs.readFileSync('users.json', 'utf-8'));
     const user = users.find(u => u.username === username);
 
-    if (!user) return res.send('아이디가 존재하지 않습니다.');
+    if (!user) {
+      return res.status(401).render('login', { error: '아이디가 존재하지 않습니다.' });
+    }
+
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.send('비밀번호가 틀렸습니다.');
+    if (!match) {
+      return res.status(401).render('login', { error: '비밀번호가 틀렸습니다.' });
+    }
 
     req.session.user = { username: user.username };
     res.redirect('/');
   } catch (err) {
-    console.error('로그인 오류:', err);
-    res.status(500).send('로그인 중 오류 발생');
+    console.error('로그인 에러:', err);
+    res.status(500).render('login', { error: '서버 오류가 발생했습니다.' });
   }
 });
+
 
 // 로그아웃
 app.get('/logout', (req, res) => {
