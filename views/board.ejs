@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>자유게시판</title></head>
+<body>
+  <h2>자유게시판</h2>
+  <a href="/">홈으로</a> | <a href="/board/new">글쓰기</a>
+  <ul>
+    <% posts.forEach(post => { %>
+      <li>
+        <a href="/board/<%= post.id %>"><%= post.title %></a>
+        - <%= post.username %>
+      </li>
+    <% }) %>
+  </ul>
+</body>
+</html>
