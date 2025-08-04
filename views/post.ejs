@@ -10,6 +10,7 @@
       padding: 20px;
       background: #f4f4f4;
     }
+
     .post {
       background: white;
       padding: 20px;
@@ -18,39 +19,47 @@
       margin: auto;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
+
     h2 {
       margin-top: 0;
     }
-    .info {
-      color: gray;
+
+    .stats {
       font-size: 0.9em;
-      margin-bottom: 10px;
+      color: #777;
+      margin-top: 10px;
     }
-    .buttons {
+
+    form {
       margin-top: 20px;
     }
+
     button {
       padding: 8px 16px;
-      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .actions {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <div class="post">
     <h2><%= post.icon || '💬' %> <%= post.title %></h2>
-    <div class="info">
-      <span>🕓 <%= new Date(post.timestamp).toLocaleString() %></span> |
-      <span>👁 조회수: <%= post.views || 0 %></span> |
-      <span>❤️ 좋아요: <%= post.likes || 0 %></span>
+    <div class="stats">
+      🕒 <%= new Date(post.timestamp).toLocaleString() %><br>
+      👁 조회수: <%= post.views || 0 %> &nbsp;&nbsp; ❤️ 좋아요: <%= post.likes || 0 %>
     </div>
     <hr>
     <p><%= post.content %></p>
 
-    <div class="buttons">
-      <form method="POST" action="/like/<%= post.id %>" style="display:inline;">
+    <div class="actions">
+      <form method="POST" action="/like/<%= post.id %>">
         <button type="submit">❤️ 좋아요</button>
       </form>
-      <form method="POST" action="/delete/<%= post.id %>" style="display:inline;">
+
+      <form method="POST" action="/delete/<%= post.id %>">
         <button type="submit">🗑 삭제</button>
       </form>
     </div>
