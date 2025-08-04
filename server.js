@@ -62,17 +62,20 @@ app.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/'));
 });
 
-// 글쓰기
+// 🔽 글쓰기 화면
 app.get('/write', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
-  res.render('write');
+  const board = req.query.board || 'popular';
+  res.render('write', { board });
 });
 
+// 🔽 글쓰기 처리
 app.post('/write', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
-  const { icon, title, content } = req.body;
+  const { icon, title, content, board } = req.body;
   const newPost = {
     id: Date.now(),
+    board: board || 'popular',
     icon: icon || '💬',
     title,
     content,
@@ -84,7 +87,7 @@ app.post('/write', (req, res) => {
   let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
   posts.push(newPost);
   fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
-  res.redirect('/');
+  res.redirect(`/${board === 'popular' ? '' : board}`);
 });
 
 // 글 상세 (조회수 증가)
