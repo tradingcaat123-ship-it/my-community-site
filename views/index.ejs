@@ -80,6 +80,12 @@
       white-space: nowrap;
     }
 
+    .post-stats {
+      font-size: 0.85em;
+      color: #888;
+      margin-top: 6px;
+    }
+
     .write-btn {
       float: right;
       margin-top: -40px;
@@ -154,7 +160,6 @@
       <p>로그인하고 질문/답변을 나눠보세요!</p>
     <% } %>
 
-    <!-- 🔽 사용자가 작성한 글 목록 -->
     <% if (posts && posts.length > 0) { %>
       <% posts.forEach(post => { %>
         <div class="post">
@@ -164,6 +169,9 @@
           </div>
           <div class="post-preview">
             <%= post.content.length > 80 ? post.content.slice(0, 80) + "..." : post.content %>
+          </div>
+          <div class="post-stats">
+            👁 <%= post.views || 0 %> | ❤️ <%= post.likes || 0 %>
           </div>
         </div>
       <% }) %>
