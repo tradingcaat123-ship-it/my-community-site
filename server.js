@@ -53,18 +53,22 @@ app.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/'));
 });
 
-// 글쓰기
+// 글쓰기 (GET)
 app.get('/write', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   res.render('write');
 });
+
+// 글쓰기 (POST)
 app.post('/write', (req, res) => {
-  const { title, content } = req.body;
+  if (!req.session.user) return res.redirect('/login');
+  const { icon, title, content } = req.body;
   const newPost = {
     id: Date.now(),
+    icon: icon || '💬',
     title,
     content,
-    username: req.session.user?.username || '익명',
+    username: req.session.user.username,
     timestamp: Date.now()
   };
   let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
@@ -73,7 +77,7 @@ app.post('/write', (req, res) => {
   res.redirect('/');
 });
 
-// 글 상세
+// 글 상세보기
 app.get('/post/:id', (req, res) => {
   const posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
   const post = posts.find(p => p.id == req.params.id);
