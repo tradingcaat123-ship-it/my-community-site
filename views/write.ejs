@@ -15,6 +15,8 @@
   <h2>글쓰기</h2>
 
   <form action="/write" method="POST">
+    <input type="hidden" name="board" value="<%= board %>">
+
     <label for="icon">🖼️ 아이콘 선택:</label>
     <select name="icon" id="icon">
       <option value="💻">💻 노트북</option>
