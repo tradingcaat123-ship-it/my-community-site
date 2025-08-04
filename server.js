@@ -1,43 +1,39 @@
+// 📁 server.js
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
 const USERS_FILE = 'users.json';
+const POSTS_FILE = 'posts.json';
 
-// 정적 파일 설정
+// 설정
 app.use(express.static(path.join(__dirname, 'public')));
-
-// EJS 템플릿 설정
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-// Body parser
 app.use(bodyParser.urlencoded({ extended: false }));
-
-// 세션 설정
-app.use(session({
-  secret: 'secret-key',
-  resave: false,
-  saveUninitialized: true
-}));
+app.use(session({ secret: 'secret-key', resave: false, saveUninitialized: true }));
 
 // 홈
 app.get('/', (req, res) => {
   const user = req.session.user || null;
-  res.render('index', { user });
+  let posts = [];
+  if (fs.existsSync(POSTS_FILE)) {
+    posts = JSON.parse(fs.readFileSync(POSTS_FILE));
+    posts.sort((a, b) => b.timestamp - a.timestamp);
+  }
+  res.render('index', { user, posts });
 });
 
-// 회원가입 폼
+// 회원가입
 app.get('/register', (req, res) => {
   res.render('register', { error: null });
 });
 
-// 회원가입 처리
 app.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -56,12 +52,11 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// 로그인 폼
+// 로그인
 app.get('/login', (req, res) => {
   res.render('login', { error: null });
 });
 
-// 로그인 처리
 app.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -84,6 +79,51 @@ app.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/'));
 });
 
+// 글쓰기 폼
+app.get('/write', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  res.render('write');
+});
+
+// 글 작성 처리
+app.post('/write', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  const { title, content } = req.body;
+  const newPost = {
+    id: Date.now().toString(),
+    title,
+    content,
+    username: req.session.user.username,
+    timestamp: Date.now()
+  };
+  let posts = [];
+  if (fs.existsSync(POSTS_FILE)) {
+    posts = JSON.parse(fs.readFileSync(POSTS_FILE));
+  }
+  posts.push(newPost);
+  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
+  res.redirect('/');
+});
+
+// 게시글 상세
+app.get('/post/:id', (req, res) => {
+  if (!fs.existsSync(POSTS_FILE)) return res.send('글이 없습니다');
+  const posts = JSON.parse(fs.readFileSync(POSTS_FILE));
+  const post = posts.find(p => p.id == req.params.id);
+  if (!post) return res.send('글이 없습니다');
+  res.render('post', { post });
+});
+
+// 게시글 삭제
+app.post('/delete/:id', (req, res) => {
+  if (!fs.existsSync(POSTS_FILE)) return res.send('삭제할 글이 없습니다');
+  let posts = JSON.parse(fs.readFileSync(POSTS_FILE));
+  posts = posts.filter(p => p.id != req.params.id);
+  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
+  res.send('<h2>글이 삭제되었습니다.</h2><a href="/">홈으로 가기</a>');
+});
+
+// 서버 실행
 app.listen(port, () => {
   console.log(`서버 실행 중: http://localhost:${port}`);
 });
