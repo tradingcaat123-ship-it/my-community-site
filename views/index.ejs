@@ -53,12 +53,31 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    .post h3 {
-      margin: 0;
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
     }
 
-    .post p {
+    .post-header a {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-decoration: none;
+      color: black;
+    }
+
+    .post-header small {
+      font-size: 0.85em;
+      color: gray;
+      margin-left: 10px;
+    }
+
+    .post-preview {
       color: #555;
+      margin-top: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .write-btn {
@@ -95,6 +114,20 @@
         display: block;
         margin-top: 10px;
       }
+
+      .post-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .post-header small {
+        margin-left: 0;
+        margin-top: 5px;
+      }
+
+      .post-header a {
+        font-size: 1.1em;
+      }
     }
   </style>
 </head>
@@ -121,36 +154,17 @@
       <p>로그인하고 질문/답변을 나눠보세요!</p>
     <% } %>
 
-    <!-- 🔽 예시글 -->
-    <div class="post">
-      <h3>🖥️ 오늘의 질문: GTX 1070 아직 쓸만한가요?</h3>
-      <p>2025년 기준 GTX 1070으로도 충분히 게임 돌아갈까요?</p>
-    </div>
-    <div class="post">
-      <h3>💻 인텔 12세대 i5 vs AMD 5600X</h3>
-      <p>그래픽 작업용으로 어떤 CPU가 나을까요?</p>
-    </div>
-    <div class="post">
-      <h3>🧊 수냉 쿨러 vs 공랭 쿨러 추천</h3>
-      <p>요즘 공랭도 잘나오던데 수냉 쓸 이유 있을까요?</p>
-    </div>
-    <div class="post">
-      <h3>🔍 칼럼: 램 클럭이 성능에 미치는 영향</h3>
-      <p>고클럭 램이 게임 성능 향상에 미치는 실제 영향은 어느 정도일까요? 실사용 기준 정리해봅니다.</p>
-    </div>
-    <div class="post">
-      <h3>🛠️ 칼럼: 전기세 아끼는 PC 세팅 가이드</h3>
-      <p>가정용 PC에서 소비 전력을 효율적으로 줄이는 팁을 정리해봅니다.</p>
-    </div>
-
     <!-- 🔽 사용자가 작성한 글 목록 -->
     <% if (posts && posts.length > 0) { %>
       <% posts.forEach(post => { %>
         <div class="post">
-          <a href="/post/<%= post.id %>">
-            <h3><%= post.icon || '💬' %> <%= post.title %></h3>
-          </a>
-          <p><%= new Date(post.timestamp).toLocaleString() %></p>
+          <div class="post-header">
+            <a href="/post/<%= post.id %>"><%= post.icon || '💬' %> <%= post.title %></a>
+            <small><%= new Date(post.timestamp).toLocaleString() %></small>
+          </div>
+          <div class="post-preview">
+            <%= post.content.length > 80 ? post.content.slice(0, 80) + "..." : post.content %>
+          </div>
         </div>
       <% }) %>
     <% } %>
