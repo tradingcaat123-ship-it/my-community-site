@@ -67,6 +67,7 @@ app.get('/write', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   res.render('write');
 });
+
 app.post('/write', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   const { icon, title, content } = req.body;
@@ -86,13 +87,14 @@ app.post('/write', (req, res) => {
   res.redirect('/');
 });
 
-// 글 상세 (조회수 +1)
+// 글 상세 (조회수 증가)
 app.get('/post/:id', (req, res) => {
   let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
-  const post = posts.find(p => p.id == req.params.id);
-  if (!post) return res.send('글 없음');
-  post.views = (post.views || 0) + 1;
+  const postIndex = posts.findIndex(p => p.id == req.params.id);
+  if (postIndex === -1) return res.send('글 없음');
+  posts[postIndex].views = (posts[postIndex].views || 0) + 1;
   fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
+  const post = posts[postIndex];
   res.render('post', { post });
 });
 
@@ -104,39 +106,13 @@ app.post('/delete/:id', (req, res) => {
   res.send('<h2>글이 삭제되었습니다.</h2><a href="/">홈으로 가기</a>');
 });
 
-// 좋아요 기능
-app.post('/like/:id', (req, res) => {
-  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
-  const post = posts.find(p => p.id == req.params.id);
-  if (!post) return res.status(404).send('글 없음');
-  post.likes = (post.likes || 0) + 1;
-  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
-  res.redirect('/post/' + post.id);
-});
-
-// 글 상세 페이지 (조회수 증가 포함)
-app.get('/post/:id', (req, res) => {
-  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
-  const postIndex = posts.findIndex(p => p.id == req.params.id);
-  if (postIndex === -1) return res.send('글 없음');
-
-  // 조회수 +1
-  posts[postIndex].views = (posts[postIndex].views || 0) + 1;
-  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
-
-  const post = posts[postIndex];
-  res.render('post', { post });
-});
-
-// 좋아요 처리
+// 좋아요 처리 (중복 없음)
 app.post('/like/:id', (req, res) => {
   let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
   const postIndex = posts.findIndex(p => p.id == req.params.id);
   if (postIndex === -1) return res.send('글 없음');
-
   posts[postIndex].likes = (posts[postIndex].likes || 0) + 1;
   fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
-
   res.redirect('/post/' + req.params.id);
 });
 
