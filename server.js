@@ -27,8 +27,13 @@ app.use(session({
 
 // 홈
 app.get('/', (req, res) => {
-  let posts = getPostsByBoard('popular');  // 인기 게시글만
-  res.render('index', { user: req.session.user || null, posts });
+  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
+  posts.sort((a, b) => b.timestamp - a.timestamp);
+  res.render('index', {
+    user: req.session.user || null,
+    posts,
+    currentBoard: '인기'  // ⭐ 글쓰기 버튼 표시용 구분자 추가
+  });
 });
 
 // 회원가입
