@@ -162,8 +162,11 @@
             <%= post.content.length > 80 ? post.content.slice(0, 80) + "..." : post.content %>
           </div>
           <div class="post-stats">
-            👁 <%= post.views || 0 %> | ❤️ <%= post.likes || 0 %>
-          </div>
+  👁 <%= post.views || 0 %> | ❤️ <%= post.likes || 0 %>
+  <% if (currentBoard === '인기') { %>
+    | 📂 <%= post.board === 'free' ? '자유게시판' : post.board === 'newsroom' ? '뉴스룸' : post.board === 'qna' ? '질문과 답변' : post.board === 'build' ? '견적상담' : '기타' %>
+  <% } %>
+</div>
         </div>
       <% }) %>
     <% } else { %>
