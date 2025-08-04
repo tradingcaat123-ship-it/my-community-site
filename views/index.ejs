@@ -61,6 +61,11 @@
       color: #555;
     }
 
+    .write-btn {
+      float: right;
+      margin-top: -40px;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 15px;
@@ -84,6 +89,12 @@
       .navbar .auth {
         margin-left: 0;
       }
+
+      .write-btn {
+        float: none;
+        display: block;
+        margin-top: 10px;
+      }
     }
   </style>
 </head>
@@ -103,12 +114,14 @@
   <div class="container">
     <% if (user) { %>
       <h2><%= user.username %>님, 하드웨어 커뮤니티에 오신 걸 환영합니다!</h2>
+      <a href="/write" class="write-btn">✍ 글쓰기</a>
       <p>궁금한 점을 자유롭게 남겨보세요.</p>
     <% } else { %>
       <h2>하드웨어 커뮤니티에 오신 걸 환영합니다!</h2>
       <p>로그인하고 질문/답변을 나눠보세요!</p>
     <% } %>
 
+    <!-- 🔽 예시글 -->
     <div class="post">
       <h3>🖥️ 오늘의 질문: GTX 1070 아직 쓸만한가요?</h3>
       <p>2025년 기준 GTX 1070으로도 충분히 게임 돌아갈까요?</p>
@@ -129,6 +142,16 @@
       <h3>🛠️ 칼럼: 전기세 아끼는 PC 세팅 가이드</h3>
       <p>가정용 PC에서 소비 전력을 효율적으로 줄이는 팁을 정리해봅니다.</p>
     </div>
+
+    <!-- 🔽 사용자가 작성한 글 목록 -->
+    <% if (posts && posts.length > 0) { %>
+      <% posts.forEach(post => { %>
+        <div class="post">
+          <a href="/post/<%= post.id %>"><h3><%= post.title %></h3></a>
+          <p><%= new Date(post.timestamp).toLocaleString() %></p>
+        </div>
+      <% }) %>
+    <% } %>
   </div>
 </body>
 </html>
