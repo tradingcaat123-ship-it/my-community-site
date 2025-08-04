@@ -14,29 +14,35 @@
     }
 
     .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       background-color: #1e2a38;
       color: white;
       padding: 10px 20px;
-      flex-wrap: wrap;
     }
 
     .navbar .logo {
       font-weight: bold;
-      font-size: 1.5em;
+      font-size: 1.8em;
+      margin-bottom: 10px;
     }
 
-    .navbar .auth {
-      font-size: 0.95em;
-      margin-top: 5px;
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
     }
 
-    .navbar a {
+    .nav-buttons a {
       color: white;
       text-decoration: none;
-      margin-left: 10px;
+      padding: 6px 12px;
+      background-color: #1e2a38;
+      border-radius: 5px;
+      font-size: 0.95em;
+    }
+
+    .nav-buttons a:hover {
+      background-color: #2c3e50;
     }
 
     .container {
@@ -107,6 +113,7 @@
       }
 
       .navbar {
+        display: flex;
         flex-direction: column;
         align-items: flex-start;
       }
@@ -140,6 +147,13 @@
 <body>
   <div class="navbar">
     <div class="logo">🔧 HardwareTalk</div>
+    <div class="nav-buttons">
+      <a href="/">인기</a>
+      <a href="/newsroom">뉴스룸</a>
+      <a href="/free">자유게시판</a>
+      <a href="/estimate">견적상담</a>
+      <a href="/qna">질문과 답변</a>
+    </div>
     <div class="auth">
       <% if (user) { %>
         <span><strong><%= user.username %></strong></span>
@@ -153,7 +167,9 @@
   <div class="container">
     <% if (user) { %>
       <h2><%= user.username %>님, 하드웨어 커뮤니티에 오신 걸 환영합니다!</h2>
-      <a href="/write" class="write-btn">✍ 글쓰기</a>
+      <% if (currentBoard !== '인기') { %>
+        <a href="/write" class="write-btn">✍ 글쓰기</a>
+      <% } %>
       <p>궁금한 점을 자유롭게 남겨보세요.</p>
     <% } else { %>
       <h2>하드웨어 커뮤니티에 오신 걸 환영합니다!</h2>
