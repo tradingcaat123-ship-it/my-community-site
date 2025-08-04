@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const app = express();
@@ -20,7 +19,6 @@ app.use(session({
   secret: 'secret-key',
   resave: false,
   saveUninitialized: false,
-  store: new FileStore({ path: './sessions' }),
   cookie: {
     maxAge: 1000 * 60 * 60,
     sameSite: 'lax'
