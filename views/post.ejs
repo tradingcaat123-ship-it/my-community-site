@@ -80,7 +80,7 @@
 <body>
   <div class="post">
     <h2><%= post.title %></h2>
-    <p><%= new Date(post.timestamp).toLocaleString() %></p>
+    <p><%= new Date(post.timestamp).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }) %></p>
     <hr>
     <p><%= post.content %></p>
 
