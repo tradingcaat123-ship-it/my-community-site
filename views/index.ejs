@@ -42,7 +42,7 @@
     .nav-buttons {
       display: flex;
       gap: 12px;
-      background-color: #2c3e50;
+      background-color: #1e2a38; /* 🔧 상단과 동일하게 맞춤 */
       padding: 10px 20px;
     }
 
@@ -139,12 +139,12 @@
   <!-- 본문 -->
   <div class="container">
     <% if (user) { %>
-      <h2><%= user.username %>님, <strong><%= currentBoard || '인기' %></strong> 게시판에 오신 걸 환영합니다!</h2>
+      <h2><%= user.username %>님, <%= currentBoard || '인기' %>에 오신 걸 환영합니다!</h2>
       <% if (currentBoard !== '인기') { %>
-        <a href="/write?board=<%= currentBoard %>" class="write-btn">✍ 글쓰기</a>
+        <a href="/write?board=<%= currentBoard === '뉴스룸' ? 'newsroom' : currentBoard === '자유게시판' ? 'free' : currentBoard === '견적상담' ? 'build' : currentBoard === '질문과 답변' ? 'qna' : 'popular' %>" class="write-btn">✍ 글쓰기</a>
       <% } %>
     <% } else { %>
-      <h2><strong><%= currentBoard || '인기' %></strong> 게시판입니다.</h2>
+      <h2><%= currentBoard || '인기' %>입니다.</h2>
       <p>로그인하고 글을 남겨보세요!</p>
     <% } %>
 
