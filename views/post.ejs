@@ -36,10 +36,17 @@
       align-items: center;
       margin-top: 30px;
       flex-wrap: wrap;
-      gap: 10px;
     }
 
-    .post-actions form {
+    .left-actions,
+    .right-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .post-actions form,
+    .post-actions a {
       margin: 0;
     }
 
@@ -56,9 +63,17 @@
       background-color: #ccc;
     }
 
-    button {
+    .like-btn {
+      background-color: #fbeec1;
+      border: 1px solid #f3c623;
+      border-radius: 5px;
       padding: 8px 16px;
+      font-weight: bold;
       cursor: pointer;
+    }
+
+    .like-btn:hover {
+      background-color: #f7e29e;
     }
   </style>
 </head>
@@ -74,15 +89,18 @@
     </div>
 
     <div class="post-actions">
-      <form method="POST" action="/delete/<%= post.id %>">
-        <button type="submit">🗑 삭제</button>
-      </form>
+      <div class="left-actions">
+        <form method="POST" action="/delete/<%= post.id %>">
+          <button type="submit">🗑 삭제</button>
+        </form>
+      </div>
 
-      <form method="POST" action="/like/<%= post.id %>">
-        <button type="submit">❤️ 좋아요</button>
-      </form>
-
-      <a href="/" class="back-btn">🔙 돌아가기</a>
+      <div class="right-actions">
+        <form method="POST" action="/like/<%= post.id %>">
+          <button type="submit" class="like-btn">❤️ 좋아요</button>
+        </form>
+        <a href="/" class="back-btn">🔙 돌아가기</a>
+      </div>
     </div>
   </div>
 </body>
