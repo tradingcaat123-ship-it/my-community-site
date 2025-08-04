@@ -21,24 +21,39 @@
     h2 {
       margin-top: 0;
     }
-    form {
+    .info {
+      color: gray;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+    }
+    .buttons {
       margin-top: 20px;
     }
     button {
       padding: 8px 16px;
+      margin-right: 10px;
     }
   </style>
 </head>
 <body>
   <div class="post">
     <h2><%= post.icon || '💬' %> <%= post.title %></h2>
-    <p><%= new Date(post.timestamp).toLocaleString() %></p>
+    <div class="info">
+      <span>🕓 <%= new Date(post.timestamp).toLocaleString() %></span> |
+      <span>👁 조회수: <%= post.views || 0 %></span> |
+      <span>❤️ 좋아요: <%= post.likes || 0 %></span>
+    </div>
     <hr>
     <p><%= post.content %></p>
 
-    <form method="POST" action="/delete/<%= post.id %>">
-      <button type="submit">🗑 삭제</button>
-    </form>
+    <div class="buttons">
+      <form method="POST" action="/like/<%= post.id %>" style="display:inline;">
+        <button type="submit">❤️ 좋아요</button>
+      </form>
+      <form method="POST" action="/delete/<%= post.id %>" style="display:inline;">
+        <button type="submit">🗑 삭제</button>
+      </form>
+    </div>
   </div>
 </body>
 </html>
