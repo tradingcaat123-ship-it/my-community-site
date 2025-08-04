@@ -27,8 +27,7 @@ app.use(session({
 
 // 홈
 app.get('/', (req, res) => {
-  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
-  posts.sort((a, b) => b.timestamp - a.timestamp);
+  let posts = getPostsByBoard('popular');  // 인기 게시글만
   res.render('index', { user: req.session.user || null, posts });
 });
 
