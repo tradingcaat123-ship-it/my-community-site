@@ -35,11 +35,17 @@ const boardMap = {
 
 // 홈 (인기 게시판)
 app.get('/', (req, res) => {
-  let posts = getPostsByBoard('popular');
+  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
+
+  // 좋아요 10개 이상 필터링
+  const filtered = posts.filter(p => p.likes >= 10);
+  // 최신순 정렬
+  filtered.sort((a, b) => b.timestamp - a.timestamp);
+
   res.render('index', {
     user: req.session.user || null,
-    posts,
-    currentBoard: boardMap['popular']
+    posts: filtered,
+    currentBoard: '인기'
   });
 });
 
