@@ -116,4 +116,30 @@ app.post('/like/:id', (req, res) => {
   res.redirect('/post/' + req.params.id);
 });
 
+app.get('/newsroom', (req, res) => {
+  const posts = getPostsByBoard('newsroom');
+  res.render('newsroom', { user: req.session.user || null, posts });
+});
+
+app.get('/free', (req, res) => {
+  const posts = getPostsByBoard('free');
+  res.render('free', { user: req.session.user || null, posts });
+});
+
+app.get('/build', (req, res) => {
+  const posts = getPostsByBoard('build');
+  res.render('build', { user: req.session.user || null, posts });
+});
+
+app.get('/qna', (req, res) => {
+  const posts = getPostsByBoard('qna');
+  res.render('qna', { user: req.session.user || null, posts });
+});
+
 app.listen(port, () => console.log(`서버 실행 중: http://localhost:${port}`));
+
+function getPostsByBoard(boardName) {
+  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
+  return posts.filter(p => p.board === boardName).sort((a, b) => b.timestamp - a.timestamp);
+}
+
