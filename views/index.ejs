@@ -145,24 +145,27 @@
   </style>
 </head>
 <body>
-  <div class="navbar">
-    <div class="logo">🔧 HardwareTalk</div>
-    <div class="nav-buttons">
-      <a href="/">인기</a>
-      <a href="/newsroom">뉴스룸</a>
-      <a href="/free">자유게시판</a>
-      <a href="/build">견적상담</a>
-      <a href="/qna">질문과 답변</a>
-    </div>
-    <div class="auth">
-      <% if (user) { %>
-        <span><strong><%= user.username %></strong></span>
-        <a href="/logout">로그아웃</a>
-      <% } else { %>
-        <a href="/login">로그인</a> | <a href="/register">회원가입</a>
-      <% } %>
-    </div>
+  <div class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; flex-wrap: wrap; background-color: #1e2a38; color: white;">
+  <div class="logo">🔧 HardwareTalk</div>
+
+  <div class="nav-buttons" style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <a href="/">인기</a>
+    <a href="/newsroom">뉴스룸</a>
+    <a href="/free">자유게시판</a>
+    <a href="/build">견적상담</a>
+    <a href="/qna">질문과 답변</a>
   </div>
+
+  <div class="auth" style="margin-left: auto;">
+    <% if (user) { %>
+      <span><strong><%= user.username %></strong></span>
+      <a href="/logout" style="margin-left: 10px; color: white;">로그아웃</a>
+    <% } else { %>
+      <a href="/login" style="color: white; margin-right: 10px;">로그인</a>
+      <a href="/register" style="color: white;">회원가입</a>
+    <% } %>
+  </div>
+</div>
 
   <div class="container">
     <% if (user) { %>
