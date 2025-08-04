@@ -165,7 +165,7 @@
         <div class="post">
           <div class="post-header">
             <a href="/post/<%= post.id %>"><%= post.icon || '💬' %> <%= post.title %></a>
-            <small><%= new Date(post.timestamp).toLocaleString() %></small>
+            <small><%= new Date(post.timestamp).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }) %></small>
           </div>
           <div class="post-preview">
             <%= post.content.length > 80 ? post.content.slice(0, 80) + "..." : post.content %>
