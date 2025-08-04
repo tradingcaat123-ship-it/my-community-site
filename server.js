@@ -16,7 +16,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// ✅ 세션을 파일에 저장 (Render 환경 대응)
 app.use(session({
   secret: 'secret-key',
   resave: false,
@@ -79,7 +78,9 @@ app.post('/write', (req, res) => {
     title,
     content,
     username: req.session.user.username,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    views: 0,
+    likes: 0
   };
   let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
   posts.push(newPost);
@@ -87,11 +88,13 @@ app.post('/write', (req, res) => {
   res.redirect('/');
 });
 
-// 글 상세
+// 글 상세 (조회수 +1)
 app.get('/post/:id', (req, res) => {
-  const posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
+  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
   const post = posts.find(p => p.id == req.params.id);
   if (!post) return res.send('글 없음');
+  post.views = (post.views || 0) + 1;
+  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
   res.render('post', { post });
 });
 
@@ -101,6 +104,16 @@ app.post('/delete/:id', (req, res) => {
   posts = posts.filter(p => p.id != req.params.id);
   fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
   res.send('<h2>글이 삭제되었습니다.</h2><a href="/">홈으로 가기</a>');
+});
+
+// 좋아요 기능
+app.post('/like/:id', (req, res) => {
+  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
+  const post = posts.find(p => p.id == req.params.id);
+  if (!post) return res.status(404).send('글 없음');
+  post.likes = (post.likes || 0) + 1;
+  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
+  res.redirect('/post/' + post.id);
 });
 
 app.listen(port, () => console.log(`서버 실행 중: http://localhost:${port}`));
