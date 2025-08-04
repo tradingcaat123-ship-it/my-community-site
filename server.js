@@ -25,14 +25,33 @@ app.use(session({
   }
 }));
 
-// 홈
+const boardMap = {
+  popular: '인기',
+  newsroom: '뉴스룸',
+  free: '자유게시판',
+  build: '견적상담',
+  qna: '질문과 답변'
+};
+
+// 홈 (인기 게시판)
 app.get('/', (req, res) => {
-  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
-  posts.sort((a, b) => b.timestamp - a.timestamp);
+  let posts = getPostsByBoard('popular');
   res.render('index', {
     user: req.session.user || null,
     posts,
-    currentBoard: '인기'  // ⭐ 글쓰기 버튼 표시용 구분자 추가
+    currentBoard: boardMap['popular']
+  });
+});
+
+// 게시판 라우팅 통합 (뉴스룸, 자유, 견적상담, Q&A)
+app.get('/:board', (req, res, next) => {
+  const board = req.params.board;
+  if (!boardMap[board]) return next(); // 다음 라우트로 넘김 (ex: /login, /post 등)
+  let posts = getPostsByBoard(board);
+  res.render('index', {
+    user: req.session.user || null,
+    posts,
+    currentBoard: boardMap[board]
   });
 });
 
@@ -66,14 +85,14 @@ app.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/'));
 });
 
-// 🔽 글쓰기 화면
+// 글쓰기
 app.get('/write', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   const board = req.query.board || 'popular';
   res.render('write', { board });
 });
 
-// 🔽 글쓰기 처리
+// 글쓰기 처리
 app.post('/write', (req, res) => {
   if (!req.session.user) return res.redirect('/login');
   const { icon, title, content, board } = req.body;
@@ -94,7 +113,7 @@ app.post('/write', (req, res) => {
   res.redirect(`/${board === 'popular' ? '' : board}`);
 });
 
-// 글 상세 (조회수 증가)
+// 글 상세
 app.get('/post/:id', (req, res) => {
   let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
   const postIndex = posts.findIndex(p => p.id == req.params.id);
@@ -113,7 +132,7 @@ app.post('/delete/:id', (req, res) => {
   res.send('<h2>글이 삭제되었습니다.</h2><a href="/">홈으로 가기</a>');
 });
 
-// 좋아요 처리 (중복 없음)
+// 좋아요
 app.post('/like/:id', (req, res) => {
   let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
   const postIndex = posts.findIndex(p => p.id == req.params.id);
@@ -123,30 +142,9 @@ app.post('/like/:id', (req, res) => {
   res.redirect('/post/' + req.params.id);
 });
 
-app.get('/newsroom', (req, res) => {
-  const posts = getPostsByBoard('newsroom');
-  res.render('newsroom', { user: req.session.user || null, posts });
-});
-
-app.get('/free', (req, res) => {
-  const posts = getPostsByBoard('free');
-  res.render('free', { user: req.session.user || null, posts });
-});
-
-app.get('/build', (req, res) => {
-  const posts = getPostsByBoard('build');
-  res.render('build', { user: req.session.user || null, posts });
-});
-
-app.get('/qna', (req, res) => {
-  const posts = getPostsByBoard('qna');
-  res.render('qna', { user: req.session.user || null, posts });
-});
-
 app.listen(port, () => console.log(`서버 실행 중: http://localhost:${port}`));
 
 function getPostsByBoard(boardName) {
   let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
   return posts.filter(p => p.board === boardName).sort((a, b) => b.timestamp - a.timestamp);
 }
-
