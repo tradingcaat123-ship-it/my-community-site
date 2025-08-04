@@ -147,7 +147,9 @@
     <% if (posts && posts.length > 0) { %>
       <% posts.forEach(post => { %>
         <div class="post">
-          <a href="/post/<%= post.id %>"><h3><%= post.title %></h3></a>
+          <a href="/post/<%= post.id %>">
+            <h3><%= post.icon || '💬' %> <%= post.title %></h3>
+          </a>
           <p><%= new Date(post.timestamp).toLocaleString() %></p>
         </div>
       <% }) %>
