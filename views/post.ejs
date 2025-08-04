@@ -30,41 +30,13 @@
       margin-top: 10px;
     }
 
-    form {
-      margin-top: 20px;
-    }
-
-    button {
-      padding: 8px 16px;
-      cursor: pointer;
-    }
-
-    .actions {
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div class="post">
-    <h2><%= post.title %></h2>
-    <p><%= new Date(post.timestamp).toLocaleString() %></p>
-    <hr>
-    <p><%= post.content %></p>
-
-    <div class="post-actions">
-      <form method="POST" action="/delete/<%= post.id %>">
-        <button type="submit">🗑 삭제</button>
-      </form>
-      <a href="/" class="back-btn">🔙 돌아가기</a>
-    </div>
-  </div>
-
-  <style>
     .post-actions {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 30px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .post-actions form {
@@ -83,6 +55,35 @@
     .back-btn:hover {
       background-color: #ccc;
     }
+
+    button {
+      padding: 8px 16px;
+      cursor: pointer;
+    }
   </style>
+</head>
+<body>
+  <div class="post">
+    <h2><%= post.title %></h2>
+    <p><%= new Date(post.timestamp).toLocaleString() %></p>
+    <hr>
+    <p><%= post.content %></p>
+
+    <div class="stats">
+      👁 조회수: <%= post.views || 0 %> | ❤️ 좋아요: <%= post.likes || 0 %>
+    </div>
+
+    <div class="post-actions">
+      <form method="POST" action="/delete/<%= post.id %>">
+        <button type="submit">🗑 삭제</button>
+      </form>
+
+      <form method="POST" action="/like/<%= post.id %>">
+        <button type="submit">❤️ 좋아요</button>
+      </form>
+
+      <a href="/" class="back-btn">🔙 돌아가기</a>
+    </div>
+  </div>
 </body>
 </html>
