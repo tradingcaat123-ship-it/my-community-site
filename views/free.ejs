@@ -1,4 +1,164 @@
-<%- include('index', {
-  pageTitle: '자유게시판',
-  activeBoard: 'free'
-}) %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>자유게시판 - HardwareTalk</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #1e2a38;
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    .navbar .logo {
+      font-weight: bold;
+      font-size: 1.8em;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav-buttons a {
+      color: white;
+      text-decoration: none;
+      padding: 6px 12px;
+      background-color: #1e2a38;
+      border-radius: 5px;
+      font-size: 0.95em;
+    }
+
+    .nav-buttons a:hover {
+      background-color: #2c3e50;
+    }
+
+    .auth {
+      margin-left: auto;
+    }
+
+    .auth a {
+      color: white;
+      margin-left: 10px;
+    }
+
+    .container {
+      padding: 20px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .post {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .post-header a {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-decoration: none;
+      color: black;
+    }
+
+    .post-header small {
+      font-size: 0.85em;
+      color: gray;
+      margin-left: 10px;
+    }
+
+    .post-preview {
+      color: #555;
+      margin-top: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .post-stats {
+      font-size: 0.85em;
+      color: #888;
+      margin-top: 6px;
+    }
+
+    .write-btn {
+      float: right;
+      margin-top: -40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">🔧 HardwareTalk</div>
+
+    <div class="nav-buttons">
+      <a href="/">인기</a>
+      <a href="/newsroom">뉴스룸</a>
+      <a href="/free">자유게시판</a>
+      <a href="/build">견적상담</a>
+      <a href="/qna">질문과 답변</a>
+    </div>
+
+    <div class="auth">
+      <% if (user) { %>
+        <span><strong><%= user.username %></strong></span>
+        <a href="/logout">로그아웃</a>
+      <% } else { %>
+        <a href="/login">로그인</a>
+        <a href="/register">회원가입</a>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="container">
+    <% if (user) { %>
+      <h2><%= user.username %>님, 자유게시판에 오신 걸 환영합니다!</h2>
+      <a href="/write?board=free" class="write-btn">✍ 글쓰기</a>
+    <% } else { %>
+      <h2>자유게시판입니다.</h2>
+      <p>로그인하고 자유롭게 의견을 남겨보세요!</p>
+    <% } %>
+
+    <% if (posts && posts.length > 0) { %>
+      <% posts.forEach(post => { %>
+        <div class="post">
+          <div class="post-header">
+            <a href="/post/<%= post.id %>"><%= post.icon || '💬' %> <%= post.title %></a>
+            <small><%= new Date(post.timestamp).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }) %></small>
+          </div>
+          <div class="post-preview">
+            <%= post.content.length > 80 ? post.content.slice(0, 80) + "..." : post.content %>
+          </div>
+          <div class="post-stats">
+            👁 <%= post.views || 0 %> | ❤️ <%= post.likes || 0 %>
+          </div>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>아직 게시글이 없습니다.</p>
+    <% } %>
+  </div>
+</body>
+</html>
