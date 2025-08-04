@@ -31,7 +31,7 @@
 </head>
 <body>
   <div class="post">
-    <h2><%= post.title %></h2>
+    <h2><%= post.icon || '💬' %> <%= post.title %></h2>
     <p><%= new Date(post.timestamp).toLocaleString() %></p>
     <hr>
     <p><%= post.content %></p>
