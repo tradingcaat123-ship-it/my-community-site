@@ -116,4 +116,30 @@ app.post('/like/:id', (req, res) => {
   res.redirect('/post/' + post.id);
 });
 
+// 글 상세 페이지 (조회수 증가 포함)
+app.get('/post/:id', (req, res) => {
+  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
+  const postIndex = posts.findIndex(p => p.id == req.params.id);
+  if (postIndex === -1) return res.send('글 없음');
+
+  // 조회수 +1
+  posts[postIndex].views = (posts[postIndex].views || 0) + 1;
+  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
+
+  const post = posts[postIndex];
+  res.render('post', { post });
+});
+
+// 좋아요 처리
+app.post('/like/:id', (req, res) => {
+  let posts = fs.existsSync(POSTS_FILE) ? JSON.parse(fs.readFileSync(POSTS_FILE)) : [];
+  const postIndex = posts.findIndex(p => p.id == req.params.id);
+  if (postIndex === -1) return res.send('글 없음');
+
+  posts[postIndex].likes = (posts[postIndex].likes || 0) + 1;
+  fs.writeFileSync(POSTS_FILE, JSON.stringify(posts, null, 2));
+
+  res.redirect('/post/' + req.params.id);
+});
+
 app.listen(port, () => console.log(`서버 실행 중: http://localhost:${port}`));
